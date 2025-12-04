@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoFlow | Automação de Leads</title>
+    <link rel="icon" type="image/x-icon" href="logo.ico">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <style>
+        /* --- VARIÁVEIS DO TEMA AUTOFLOW --- */
+        :root {
+            --bg-body: #09090B;
+            --bg-card: #18181B;
+            --bg-card-hover: #27272A;
+            --text-primary: #FFFFFF;
+            --text-secondary: #A1A1AA;
+            --text-muted: #71717A;
+            
+            --accent-start: #3B82F6; 
+            --accent-end: #8B5CF6;
+            
+            --border-subtle: #27272A;
+            --border-highlight: #3B82F6;
+        }
+
+        /* --- RESET & GLOBAL --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        ul { list-style: none; }
+
+        /* --- UTILITIES --- */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* --- BOTÕES --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            font-size: 1rem;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-start) 0%, var(--accent-end) 100%);
+            color: white;
+            border: 1px solid transparent;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.6);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--text-primary);
+            color: var(--text-primary);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(59, 130, 246, 0.15);
+            color: #60A5FA;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        /* --- BACKGROUND EFFECTS --- */
+        .glow-bg {
+            position: absolute;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, rgba(9, 9, 11, 0) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* --- NAVBAR --- */
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            backdrop-filter: blur(16px);
+            background: rgba(9, 9, 11, 0.85);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1rem 0;
+        }
+
+        .nav-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo-img {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .logo-text { 
+            font-size: 1.1rem; 
+            font-weight: 700; 
+            letter-spacing: -0.02em; 
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            padding: 3rem 0 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-size: 2rem; /* Mobile default */
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            padding: 0 1rem;
+        }
+        
+        .cta-container {
+            display: flex; 
+            flex-direction: column;
+            gap: 1rem; 
+            align-items: center;
+            width: 100%;
+        }
+
+        /* --- DESKTOP MOCKUP --- */
+        .desktop-wrapper {
+            margin-top: 3rem;
+            display: flex;
+            justify-content: center;
+            perspective: 1000px;
+            padding: 0 10px; /* Evita tocar nas bordas no mobile */
+        }
+
+        .window-mockup {
+            width: 100%;
+            max-width: 900px;
+            background: #0f0f11;
+            border: 1px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 20px 50px -10px rgba(0,0,0,0.5);
+            overflow: hidden;
+            transform: rotateX(0deg); /* Sem 3D no mobile para legibilidade */
+            transition: transform 0.5s ease;
+        }
+
+        .window-header {
+            background: #1f1f22;
+            padding: 8px 12px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #333;
+            gap: 6px;
+        }
+
+        .traffic-light { width: 10px; height: 10px; border-radius: 50%; }
+        .tl-red { background: #FF5F56; }
+        .tl-yellow { background: #FFBD2E; }
+        .tl-green { background: #27C93F; }
+
+        .window-body {
+            display: flex;
+            height: 300px; /* Altura menor no mobile */
+        }
+
+        /* UI do Mockup */
+        .app-sidebar {
+            width: 60px; /* Sidebar fina no mobile */
+            background: #18181b;
+            border-right: 1px solid #333;
+            padding: 15px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .app-nav-item {
+            height: 8px;
+            background: #333;
+            border-radius: 4px;
+            width: 100%;
+        }
+        .app-nav-item.active { background: var(--accent-start); }
+
+        .app-content {
+            flex: 1;
+            padding: 15px;
+            background: #09090b;
+            overflow: hidden;
+        }
+
+        .app-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* 1 coluna no mobile */
+            gap: 10px;
+        }
+        
+        .fake-card {
+            height: 80px;
+            background: #18181b;
+            border-radius: 6px;
+            border: 1px solid #333;
+        }
+
+        /* --- FEATURES --- */
+        .features { padding: 3rem 0; }
+
+        .grid-bento {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            padding: 1.5rem;
+            border-radius: 1rem;
+        }
+
+        .icon-box {
+            width: 40px;
+            height: 40px;
+            background: rgba(59, 130, 246, 0.1);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-start);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            border-top: 1px solid var(--border-subtle);
+            padding: 2rem 0;
+            background: #050505;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        /* --- MEDIA QUERIES (A MÁGICA DA RESPONSIVIDADE) --- */
+        
+        /* Tablets e Desktops (acima de 768px) */
+        @media (min-width: 768px) {
+            .hero h1 { font-size: 3.5rem; }
+            .hero p { font-size: 1.125rem; }
+            
+            .cta-container { 
+                flex-direction: row; 
+                justify-content: center; 
+            }
+
+            .logo-img { width: 32px; height: 32px; }
+            .logo-text { font-size: 1.25rem; }
+
+            /* Volta o mockup para tamanho full e efeito 3D */
+            .window-mockup { transform: rotateX(5deg); border-radius: 12px; }
+            .window-mockup:hover { transform: rotateX(0deg) scale(1.02); }
+            
+            .window-header { padding: 12px 16px; gap: 8px; }
+            .traffic-light { width: 12px; height: 12px; }
+            
+            .window-body { height: 450px; }
+            
+            .app-sidebar { 
+                width: 200px; 
+                padding: 20px; 
+                align-items: stretch; /* Volta itens esticados */
+            }
+            
+            .app-content { padding: 30px; }
+            .app-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+            .fake-card { height: 120px; }
+
+            .grid-bento { grid-template-columns: repeat(3, 1fr); }
+            .card { padding: 2rem; }
+            .icon-box { width: 48px; height: 48px; font-size: 1.5rem; }
+        }
+
+        /* Ajustes finos para celulares muito pequenos (iPhone SE, etc) */
+        @media (max-width: 380px) {
+            .hero h1 { font-size: 1.75rem; }
+            .btn { width: 100%; } /* Botões full width */
+            .logo-text { display: none; } /* Esconde texto da logo se faltar espaço */
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="glow-bg"></div>
+
+    <nav>
+        <div class="container nav-content">
+            <div class="brand">
+                <img src="imgs/logo.ico" alt="AutoFlow Logo" class="logo-img">
+                <div class="logo-text">AutoFlow</div>
+            </div>
+
+            <div>
+                <a href="https://wa.me/553884335313" target="_blank" class="btn btn-outline" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                    <i class="ph ph-whatsapp-logo"></i> Suporte
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero container">
+        <span class="badge">Versão 1.0.1 • Estável</span>
+
+        <h1>
+            Automação inteligente<br>
+            <span class="text-gradient">sem esforço manual.</span>
+        </h1>
+
+        <p>
+            O <strong>AutoFlow</strong> coleta leads do Instagram, organiza planilhas e 
+            mantém seus dados atualizados. Foque em vender.
+        </p>
+
+        <div class="cta-container">
+            <a href="https://srv786600.hstgr.cloud:8443/app/downloads/mysetup.exe" class="btn btn-primary" download>
+                <i class="ph ph-windows-logo" style="font-size: 1.25rem;"></i>
+                <span>Baixar para Windows</span>
+            </a>
+            
+            <a href="#features" class="btn btn-outline">
+                <i class="ph ph-info" style="font-size: 1.25rem;"></i>
+                <span>Saiba Mais</span>
+            </a>
+        </div>
+
+        <div class="desktop-wrapper">
+            <div class="window-mockup">
+                <div class="window-header">
+                    <div class="traffic-light tl-red"></div>
+                    <div class="traffic-light tl-yellow"></div>
+                    <div class="traffic-light tl-green"></div>
+                    <span style="font-size: 0.75rem; color: #666; margin-left: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">AutoFlow - Lead Collector</span>
+                </div>
+                <div class="window-body">
+                    <div class="app-sidebar">
+                        <div class="app-nav-item active"></div>
+                        <div class="app-nav-item"></div>
+                        <div class="app-nav-item"></div>
+                        <div style="margin-top: auto; width: 100%;">
+                            <div class="app-nav-item" style="opacity: 0.5;"></div>
+                        </div>
+                    </div>
+                    <div class="app-content">
+                        <h3 style="color:white; margin-bottom: 15px; font-size: 1rem;">Dashboard</h3>
+                        <div class="app-grid">
+                            <div class="fake-card"></div>
+                            <div class="fake-card"></div>
+                            <div class="fake-card" style="grid-column: span 1;"></div> </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="container features">
+        <h2 style="text-align: center; margin-bottom: 0.5rem; font-size: 1.75rem;">Poder Total</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 2rem; font-size: 0.95rem; padding: 0 1rem;">
+            Tudo o que você precisa para escalar.
+        </p>
+
+        <div class="grid-bento">
+            <div class="card">
+                <div class="icon-box"><i class="ph ph-magnifying-glass"></i></div>
+                <h3>Extração Instagram</h3>
+                <p>Encontre milhares de empresas filtrando por nicho e localização em segundos.</p>
+            </div>
+
+            <div class="card">
+                <div class="icon-box"><i class="ph ph-microsoft-excel-logo"></i></div>
+                <h3>Integração Excel</h3>
+                <p>Cria, atualiza e gerencia suas planilhas automaticamente.</p>
+            </div>
+
+            <div class="card">
+                <div class="icon-box"><i class="ph ph-cloud-arrow-up"></i></div>
+                <h3>Atualizações</h3>
+                <p>Sistema inteligente que verifica e instala novas versões direto da nuvem.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 AutoFlow. Todos os direitos reservados.</p>
+            <p style="margin-top: 0.5rem; opacity: 0.5;">Potencialize suas vendas.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("AutoFlow Landing Page Carregada");
+        });
+    </script>
+</body>
+
+</html>
